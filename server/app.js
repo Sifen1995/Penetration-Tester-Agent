@@ -2,13 +2,24 @@ require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const helmet = require('helmet');
+const path = require('path');
 const pentestRoutes = require('../routes/pentestRoute');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Security middleware
-app.use(helmet());
+// Security middleware with CSP configuration for frontend
+app.use(helmet({
+  contentSecurityPolicy: {
+    directives: {
+      defaultSrc: ["'self'"],
+      styleSrc: ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com"],
+      fontSrc: ["'self'", "https://fonts.gstatic.com"],
+      scriptSrc: ["'self'"],
+      imgSrc: ["'self'", "data:", "https:"]
+    }
+  }
+}));
 
 // CORS configuration
 app.use(cors({
@@ -28,40 +39,15 @@ app.use((req, res, next) => {
   next();
 });
 
+// Serve static files from public directory
+app.use(express.static(path.join(__dirname, '../public')));
+
 // API routes
 app.use('/api', pentestRoutes);
 
-// Root endpoint
+// Serve frontend UI at root
 app.get('/', (req, res) => {
-  res.json({
-    message: 'Penetration Tester Agent API',
-    version: '1.0.0',
-    endpoints: {
-      pentest: 'POST /api/pentest',
-      health: 'GET /api/health'
-    },
-    documentation: {
-      pentest: {
-        method: 'POST',
-        path: '/api/pentest',
-        body: {
-          url: 'https://example.com',
-          format: 'json | text (optional)'
-        },
-        description: 'Run a security penetration test on the target URL'
-      },
-      health: {
-        method: 'GET',
-        path: '/api/health',
-        description: 'Check API and Groq service health'
-      }
-    },
-    usage: {
-      example: `curl -X POST http://localhost:${PORT}/api/pentest \\
-  -H "Content-Type: application/json" \\
-  -d '{"url": "https://example.com"}'`
-    }
-  });
+  res.sendFile(path.join(__dirname, '../public/index.html'));
 });
 
 // 404 handler
@@ -94,8 +80,8 @@ app.listen(PORT, () => {
   console.log(`\nServer running on: http://localhost:${PORT}`);
   console.log(`Environment: ${process.env.NODE_ENV || 'development'}`);
   console.log(`Groq API Key: ${process.env.GROQ_API_KEY ? '✓ Configured' : '✗ Missing'}`);
-  console.log('\nAvailable endpoints:');
-  console.log(`  GET  http://localhost:${PORT}/`);
+  console.log(`\n🎨 Web UI: http://localhost:${PORT}`);
+  console.log('\nAPI Endpoints:');
   console.log(`  POST http://localhost:${PORT}/api/pentest`);
   console.log(`  GET  http://localhost:${PORT}/api/health`);
   console.log('\n═══════════════════════════════════════════════════\n');

@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Penetration Tester Agent - Security Scanner</title>
+    <link rel="stylesheet" href="/css/styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="logo">
+                <svg class="logo-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                    <path d="M9 12l2 2 4-4"></path>
+                </svg>
+                <h1>PenTester Agent</h1>
+            </div>
+            <p class="subtitle">AI-Powered Web Security Scanner</p>
+        </header>
+
+        <!-- Main Card -->
+        <div class="main-card">
+            <div class="scan-section">
+                <h2>Enter Target URL</h2>
+                <p class="description">Analyze web applications for security vulnerabilities using AI-powered scanning</p>
+
+                <form id="scanForm" class="scan-form">
+                    <div class="input-group">
+                        <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="11" cy="11" r="8"></circle>
+                            <path d="m21 21-4.35-4.35"></path>
+                        </svg>
+                        <input
+                            type="url"
+                            id="targetUrl"
+                            placeholder="https://example.com"
+                            required
+                            autocomplete="url"
+                        >
+                    </div>
+
+                    <div class="format-selector">
+                        <label class="radio-label">
+                            <input type="radio" name="format" value="json" checked>
+                            <span>JSON Report</span>
+                        </label>
+                        <label class="radio-label">
+                            <input type="radio" name="format" value="text">
+                            <span>Text Report</span>
+                        </label>
+                    </div>
+
+                    <button type="submit" id="scanButton" class="scan-button">
+                        <svg class="button-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                        </svg>
+                        <span>Start Security Scan</span>
+                    </button>
+                </form>
+
+                <!-- Warning Notice -->
+                <div class="warning-notice">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+                        <line x1="12" y1="9" x2="12" y2="13"></line>
+                        <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                    </svg>
+                    <span>Only scan websites you own or have permission to test</span>
+                </div>
+            </div>
+
+            <!-- Loading State -->
+            <div id="loadingState" class="loading-state hidden">
+                <div class="spinner"></div>
+                <h3>Analyzing Security...</h3>
+                <p id="loadingPhase">Initializing scan...</p>
+                <div class="progress-steps">
+                    <div class="step" data-step="1">
+                        <div class="step-number">1</div>
+                        <div class="step-label">Reconnaissance</div>
+                    </div>
+                    <div class="step" data-step="2">
+                        <div class="step-number">2</div>
+                        <div class="step-label">Vulnerability Scan</div>
+                    </div>
+                    <div class="step" data-step="3">
+                        <div class="step-number">3</div>
+                        <div class="step-label">AI Analysis</div>
+                    </div>
+                    <div class="step" data-step="4">
+                        <div class="step-number">4</div>
+                        <div class="step-label">Report Generation</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Results Section -->
+            <div id="resultsSection" class="results-section hidden">
+                <div class="results-header">
+                    <h2>Security Report</h2>
+                    <button id="newScanButton" class="secondary-button">New Scan</button>
+                </div>
+
+                <div id="reportContent" class="report-content">
+                    <!-- JSON Report -->
+                    <div id="jsonReport" class="json-report hidden">
+                        <div class="report-summary">
+                            <div class="summary-card">
+                                <div class="summary-label">Target</div>
+                                <div id="targetDisplay" class="summary-value"></div>
+                            </div>
+                            <div class="summary-card">
+                                <div class="summary-label">Risk Level</div>
+                                <div id="riskLevel" class="summary-value risk-badge"></div>
+                            </div>
+                            <div class="summary-card">
+                                <div class="summary-label">Total Findings</div>
+                                <div id="totalFindings" class="summary-value"></div>
+                            </div>
+                        </div>
+
+                        <div class="executive-summary">
+                            <h3>Executive Summary</h3>
+                            <p id="execSummary"></p>
+                        </div>
+
+                        <div id="criticalSection" class="critical-section hidden">
+                            <h3>Critical Findings</h3>
+                            <ul id="criticalList" class="findings-list"></ul>
+                        </div>
+
+                        <div id="findingsSection" class="findings-section hidden">
+                            <h3>Detailed Findings</h3>
+                            <div id="findingsList" class="detailed-findings"></div>
+                        </div>
+
+                        <div id="recommendationsSection" class="recommendations-section hidden">
+                            <h3>Recommendations</h3>
+                            <ol id="recommendationsList" class="recommendations-list"></ol>
+                        </div>
+
+                        <div class="action-buttons">
+                            <button id="downloadJsonButton" class="action-button">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                                    <polyline points="7 10 12 15 17 10"></polyline>
+                                    <line x1="12" y1="15" x2="12" y2="3"></line>
+                                </svg>
+                                Download JSON
+                            </button>
+                            <button id="copyButton" class="action-button">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                                    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                                </svg>
+                                Copy Report
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Text Report -->
+                    <div id="textReport" class="text-report hidden">
+                        <pre id="textReportContent"></pre>
+                        <div class="action-buttons">
+                            <button id="downloadTextButton" class="action-button">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                                    <polyline points="7 10 12 15 17 10"></polyline>
+                                    <line x1="12" y1="15" x2="12" y2="3"></line>
+                                </svg>
+                                Download Report
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Error State -->
+            <div id="errorState" class="error-state hidden">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <line x1="12" y1="8" x2="12" y2="12"></line>
+                    <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                </svg>
+                <h3>Scan Failed</h3>
+                <p id="errorMessage"></p>
+                <button id="retryButton" class="scan-button">Try Again</button>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <p>Powered by <strong>Groq AI</strong> • Built with Node.js & Express</p>
+            <p class="disclaimer">For authorized security testing only</p>
+        </footer>
+    </div>
+
+    <script src="/js/app.js"></script>
+</body>
+</html>
