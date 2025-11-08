@@ -1,0 +1,40 @@
+{
+  "name": "penetration-tester-agent",
+  "version": "1.0.0",
+  "description": "Autonomous AI agent for ethical web application penetration testing using Groq API",
+  "main": "server/app.js",
+  "scripts": {
+    "start": "node server/app.js",
+    "dev": "nodemon server/app.js",
+    "test": "node test/testAgent.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Sifen1995/Penetration-Tester-Agent.git"
+  },
+  "keywords": [
+    "penetration-testing",
+    "security",
+    "ai-agent",
+    "groq",
+    "vulnerability-scanner"
+  ],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/Sifen1995/Penetration-Tester-Agent/issues"
+  },
+  "homepage": "https://github.com/Sifen1995/Penetration-Tester-Agent#readme",
+  "dependencies": {
+    "axios": "^1.13.2",
+    "dotenv": "^17.2.3",
+    "express": "^5.1.0",
+    "groq-sdk": "^0.3.0",
+    "cors": "^2.8.5",
+    "helmet": "^7.1.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.2"
+  }
+}
