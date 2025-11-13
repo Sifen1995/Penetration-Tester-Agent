@@ -30,3 +30,6 @@ pentest-report-*.json
 # Build outputs
 dist/
 build/
+
+# Claude Code local settings
+.claude/
